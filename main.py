@@ -18,8 +18,7 @@ from functools import wraps
 from flask import abort
 
 app = Flask(__name__)
-app.secret_key = "ER56KG230s9G87t6hkK90qtT7e6378ki090E5943"
-
+app.secret_key = os.environ["SECRET_KEY"]
 app.app_context().push()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog_post.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
