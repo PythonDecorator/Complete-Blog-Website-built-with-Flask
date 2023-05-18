@@ -18,7 +18,7 @@ from functools import wraps
 from flask import abort
 
 app = Flask(__name__)
-app.secret_key = os.environ["SECRET_KEY"]
+app.secret_key = os.environ.get("SECRET_KEY")
 app.app_context().push()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog_post.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -30,9 +30,9 @@ ckeditor = CKEditor(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False,
                     force_lower=False, use_ssl=False, base_url=None)
 
-FROM_EMAIL = os.environ["FROM_EMAIL"]
-PASSWORD = os.environ["PASSWORD"]
-TO_EMAIL = os.environ["TO_EMAIL"]
+FROM_EMAIL = os.environ.get("FROM_EMAIL")
+PASSWORD = os.environ.get("PASSWORD")
+TO_EMAIL = os.environ.get("TO_EMAIL")
 
 
 @login_manager.user_loader
@@ -116,7 +116,7 @@ class ContactUs(db.Model):
 
 
 # RUN THIS LINE ONCE TO CREATE THE DATABASE TABLE
-# db.create_all()
+db.create_all()
 
 
 # FORMS
@@ -128,7 +128,7 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(LoginForm):
-    name = StringField('Name', [DataRequired(), Length(min=2, max=50)])
+    name = StringField('Name', [DataRequired()])
     agree = BooleanField('Agree', [DataRequired(message="Check to agree to user terms")])
     signup = SubmitField("Sign Up")
 
@@ -270,7 +270,6 @@ def add():
 def edit():
     post_edit_form = PostEditForm()
     if request.method == "POST":
-        # UPDATE RECORD
         post_id = request.args.get('post_id')
         post_to_update = db.session.query(AllBlogPosts).get(int(post_id))
         post_to_update.subtitle = request.form["subtitle"]
@@ -342,4 +341,4 @@ def faqs():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()
