@@ -53,6 +53,20 @@ def admin_only(f):
     return decorated_function
 
 
+# SEND EMAIL
+def send_to_email(subject, message):
+    our_gmail = "brymoamos.developer@gmail.com"
+    password = "wwggfwibshjnvpjd"
+    email = "okpeamos.ao@gmail.com"
+    with smtplib.SMTP(host="smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(our_gmail, password)
+        connection.sendmail(
+            from_addr=our_gmail,
+            to_addrs=email,
+            msg=f"Subject:{subject}\n\n{message}".encode('utf-8'))
+
+
 # DATABASE TABLES
 class User(UserMixin, db.Model):
     __tablename__ = "user"
@@ -304,18 +318,14 @@ def contact_us():
         EMAIL: {email}
         {message}
 """
-        try:
-            with smtplib.SMTP(host="smtp.gmail.com") as connection:
-                connection.starttls()
-                connection.login(our_gmail, password)
-                connection.sendmail(
-                    from_addr=our_gmail,
-                    to_addrs=email,
-                    msg=f"Subject:Blog Post\n\n{message}".encode('utf-8'))
-        except TimeoutError:
-            return redirect(url_for('secrets'))
-        else:
-            return redirect(url_for('secrets'))
+        with smtplib.SMTP(host="smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(our_gmail, password)
+            connection.sendmail(
+                from_addr=our_gmail,
+                to_addrs=email,
+                msg=f"Subject:Blog Post\n\n{message}".encode('utf-8'))
+        return redirect(url_for('secrets'))
     return render_template("contact_us.html", form=contact_us_form, current_user=current_user,
                            logged_in=current_user.is_authenticated)
 
@@ -331,4 +341,4 @@ def faqs():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
