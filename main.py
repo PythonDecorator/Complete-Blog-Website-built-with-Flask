@@ -52,21 +52,7 @@ def admin_only(f):
 
     return decorated_function
 
-
-# SEND EMAIL
-def send_to_email(subject, message):
-    our_gmail = "brymoamos.developer@gmail.com"
-    password = "wwggfwibshjnvpjd"
-    email = "okpeamos.ao@gmail.com"
-    with smtplib.SMTP(host="smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(our_gmail, password)
-        connection.sendmail(
-            from_addr=our_gmail,
-            to_addrs=email,
-            msg=f"Subject:{subject}\n\n{message}".encode('utf-8'))
-
-
+  
 # DATABASE TABLES
 class User(UserMixin, db.Model):
     __tablename__ = "user"
